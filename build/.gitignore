@@ -1,0 +1,4 @@
+CMake
+tinyros-logs
+output/*
+!output/roslib

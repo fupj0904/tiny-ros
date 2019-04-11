@@ -1,0 +1,159 @@
+#ifndef _ROS_SERVICE_DemuxList_h
+#define _ROS_SERVICE_DemuxList_h
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include "ros/msg.h"
+
+namespace topic_tools
+{
+
+static const char DEMUXLIST[] = "topic_tools/DemuxList";
+
+  class DemuxListRequest : public ros::Msg
+  {
+    private:
+      typedef uint32_t ___id___type;
+      ___id___type __id__;
+
+    public:
+
+    DemuxListRequest()
+    {
+      this->__id__ = 0;
+    }
+
+    virtual int serialize(unsigned char *outbuffer) const
+    {
+      int offset = 0;
+      *(outbuffer + offset + 0) = (this->__id__ >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->__id__ >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->__id__ >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->__id__ >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->__id__);
+      return offset;
+    }
+
+    virtual int deserialize(unsigned char *inbuffer)
+    {
+      int offset = 0;
+      this->__id__ =  ((uint32_t) (*(inbuffer + offset)));
+      this->__id__ |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->__id__ |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      this->__id__ |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      offset += sizeof(this->__id__);
+      return offset;
+    }
+
+    virtual int serializedLength() const
+    {
+      int length = 0;
+      return length;
+    }
+
+    const char * getType(){ return DEMUXLIST; }
+    const char * getMD5(){ return "4806094f3d39214cbf2b56ad9acf149b"; }
+    const uint32_t getID(){ return this->__id__; }
+    void setID(uint32_t id){ this->__id__ = id; }
+
+  };
+
+  class DemuxListResponse : public ros::Msg
+  {
+    private:
+      typedef uint32_t ___id___type;
+      ___id___type __id__;
+
+    public:
+      uint32_t topics_length;
+      typedef char* _topics_type;
+      _topics_type st_topics;
+      _topics_type * topics;
+
+    DemuxListResponse():
+      topics_length(0), topics(NULL)
+    {
+      this->__id__ = 0;
+    }
+
+    virtual int serialize(unsigned char *outbuffer) const
+    {
+      int offset = 0;
+      *(outbuffer + offset + 0) = (this->__id__ >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->__id__ >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->__id__ >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->__id__ >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->__id__);
+      *(outbuffer + offset + 0) = (this->topics_length >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->topics_length >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->topics_length >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->topics_length >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->topics_length);
+      for( uint32_t i = 0; i < topics_length; i++){
+      uint32_t length_topicsi = strlen(this->topics[i]);
+      varToArr(outbuffer + offset, length_topicsi);
+      offset += 4;
+      memcpy(outbuffer + offset, this->topics[i], length_topicsi);
+      offset += length_topicsi;
+      }
+      return offset;
+    }
+
+    virtual int deserialize(unsigned char *inbuffer)
+    {
+      int offset = 0;
+      this->__id__ =  ((uint32_t) (*(inbuffer + offset)));
+      this->__id__ |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->__id__ |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      this->__id__ |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      offset += sizeof(this->__id__);
+      uint32_t topics_lengthT = ((uint32_t) (*(inbuffer + offset))); 
+      topics_lengthT |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1); 
+      topics_lengthT |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2); 
+      topics_lengthT |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3); 
+      offset += sizeof(this->topics_length);
+      if(topics_lengthT > topics_length)
+        this->topics = (char**)realloc(this->topics, topics_lengthT * sizeof(char*));
+      topics_length = topics_lengthT;
+      for( uint32_t i = 0; i < topics_length; i++){
+      uint32_t length_st_topics;
+      arrToVar(length_st_topics, (inbuffer + offset));
+      offset += 4;
+      for(unsigned int k= offset; k< offset+length_st_topics; ++k){
+          inbuffer[k-1]=inbuffer[k];
+      }
+      inbuffer[offset+length_st_topics-1]=0;
+      this->st_topics = (char *)(inbuffer + offset-1);
+      offset += length_st_topics;
+        memcpy( &(this->topics[i]), &(this->st_topics), sizeof(char*));
+      }
+      return offset;
+    }
+
+    virtual int serializedLength() const
+    {
+      int length = 0;
+      length += sizeof(this->topics_length);
+      for( uint32_t i = 0; i < topics_length; i++){
+      uint32_t length_topicsi = strlen(this->topics[i]);
+      length += 4;
+      length += length_topicsi;
+      }
+      return length;
+    }
+
+    const char * getType(){ return DEMUXLIST; }
+    const char * getMD5(){ return "eeb6b83e3e10622fc0bb02754a132bfa"; }
+    const uint32_t getID(){ return this->__id__; }
+    void setID(uint32_t id){ this->__id__ = id; }
+
+  };
+
+  class DemuxList {
+    public:
+    typedef DemuxListRequest Request;
+    typedef DemuxListResponse Response;
+  };
+
+}
+#endif
